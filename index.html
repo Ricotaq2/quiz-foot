@@ -71,7 +71,7 @@
     const players = [
       { name: "Lionel Messi", img: "messi.jpg" },
       { name: "Cristiano Ronaldo", img: "ronaldo.jpg" },
-      { name: "Kylian Mbappé", img: "mbappe.jpg" }
+      { name: "Kylian MbappÃ©", img: "mbappe.jpg" }
     ];
 
     let score = 0;
@@ -92,7 +92,7 @@
         timerDiv.textContent = `Temps : ${timeLeft}s`;
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          alert("Temps écoulé !");
+          alert("Temps Ã©coulÃ© !");
           startRound();
         }
       }, 1000);
@@ -101,7 +101,7 @@
       img.src = correctPlayer.img;
       img.style.display = "block";
 
-      // Animation flash quand l'image disparaît
+      // Animation flash quand l'image disparaÃ®t
       setTimeout(() => {
         img.classList.add("flash");
         setTimeout(() => {
