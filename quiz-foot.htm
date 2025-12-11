@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Football</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #111;
+      color: white;
+      padding: 20px;
+    }
+
+    #player-img {
+      width: 220px;
+      margin: 20px;
+      display: none;
+    }
+
+    #choices button {
+      margin: 10px;
+      padding: 12px 25px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background: #333;
+      color: white;
+      transition: 0.2s;
+    }
+
+    #choices button:hover {
+      background: #555;
+    }
+
+    /* Flash animation */
+    .flash {
+      animation: flashEffect 0.4s ease-out;
+    }
+
+    @keyframes flashEffect {
+      0% { opacity: 1; filter: brightness(1); }
+      50% { opacity: 0; filter: brightness(4); }
+      100% { opacity: 1; filter: brightness(1); }
+    }
+
+    #timer {
+      font-size: 24px;
+      margin: 10px;
+    }
+
+    #score {
+      font-size: 24px;
+      margin: 10px;
+      color: #0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Quiz Football</h1>
+
+  <div id="score">Score : 0</div>
+  <div id="timer">Temps : 3s</div>
+
+  <img id="player-img" />
+  <div id="choices"></div>
+
+  <script>
+    const players = [
+      { name: "Lionel Messi", img: "messi.jpg" },
+      { name: "Cristiano Ronaldo", img: "ronaldo.jpg" },
+      { name: "Kylian Mbappé", img: "mbappe.jpg" }
+    ];
+
+    let score = 0;
+    let timeLeft = 3;
+    let timerInterval;
+
+    function startRound() {
+      const img = document.getElementById("player-img");
+      const choicesDiv = document.getElementById("choices");
+      const timerDiv = document.getElementById("timer");
+
+      timeLeft = 3;
+      timerDiv.textContent = `Temps : ${timeLeft}s`;
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerDiv.textContent = `Temps : ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          alert("Temps écoulé !");
+          startRound();
+        }
+      }, 1000);
+
+      const correctPlayer = players[Math.floor(Math.random() * players.length)];
+      img.src = correctPlayer.img;
+      img.style.display = "block";
+
+      // Animation flash quand l'image disparaît
+      setTimeout(() => {
+        img.classList.add("flash");
+        setTimeout(() => {
+          img.style.display = "none";
+          img.classList.remove("flash");
+        }, 400);
+      }, 1500);
+
+      const options = shuffle([correctPlayer, ...randomOthers(correctPlayer, 2)]);
+
+      choicesDiv.innerHTML = "";
+      options.forEach(player => {
+        const btn = document.createElement("button");
+        btn.textContent = player.name;
+
+        btn.onclick = () => {
+          clearInterval(timerInterval);
+          if (player === correctPlayer) {
+            score++;
+            document.getElementById("score").textContent = `Score : ${score}`;
+            alert("Correct !");
+          } else {
+            alert("Faux !");
+          }
+          startRound();
+        };
+
+        choicesDiv.appendChild(btn);
+      });
+    }
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function randomOthers(correct, n) {
+      return shuffle(players.filter(p => p !== correct)).slice(0, n);
+    }
+
+    startRound();
+  </script>
+</body>
+</html>
